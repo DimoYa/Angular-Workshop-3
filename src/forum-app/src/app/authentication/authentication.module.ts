@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 
 
@@ -18,6 +18,7 @@ imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     AuthenticationRoutingModule
 ],
 })

@@ -1,32 +1,38 @@
 <div class="container">
-    <form class="login" #userLogin = "ngForm" (ngSubmit) = "login(userLogin.value)">
+    <form class="login" [formGroup]="loginFormGroup" (ngSubmit)="login()">
 
         <fieldset>
             <h2>Login Form</h2>
-
+            <p *ngIf="errorMessage" class="alert-danger">{{errorMessage}}</p>
             <p class="field field-icon">
                 <label for="email"><span><i class="fas fa-envelope"></i></span></label>
-                <input class="input-error" type="email" name="email" id="email" placeholder="john.doe@gmail.com" ngModel>
+                <input formControlName="email" class="input-error" type="email" name="email" id="email" placeholder="john.doe@gmail.com">
             </p>
-            <p class="error">
-                Email is required!
-            </p>
-            <!-- <p class="error">
-                Email is not valid!
-            </p> -->
+            <ng-container *ngIf="f['email'].touched && f['email'].invalid">
+                <p *ngIf="f['email'].errors['required']" class="alert alert-danger">
+                    Email is required!
+                </p>
+    
+                <p *ngIf="f['email'].errors['email']" class="alert alert-danger">
+                    Email is not valid!
+                </p>
+            </ng-container>
 
             <p class="field field-icon">
                 <label for="password"><span><i class="fas fa-lock"></i></span></label>
-                <input type="password" name="password" id="password" placeholder="******" ngModel>
+                <input formControlName="password" type="password" name="password" id="password" placeholder="******">
             </p>
-            <!-- <p class="error">
+            <ng-container
+            *ngIf="f['password'].touched && f['password'].invalid">
+            <p *ngIf="f['password'].errors['required']" class="alert alert-danger">
                 Password is required!
             </p>
-            <p class="error">
-                Password must be at least 4 characters!
-            </p> -->
+            <p *ngIf="f['password'].errors['minlength']" class="alert alert-danger">
+                Password must be at least 5 characters!
+            </p>
+        </ng-container>
 
-            <button>Login</button>
+            <button [disabled]="loginFormGroup.invalid">Login</button>
 
             <p class="text-center">
                 Have an account?

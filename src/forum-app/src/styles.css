@@ -43,3 +43,8 @@ button:hover {
 main {
     width: 50%;
 }
+
+.alert-danger {
+    background-color: #bc204b;
+    color: #fff;
+}

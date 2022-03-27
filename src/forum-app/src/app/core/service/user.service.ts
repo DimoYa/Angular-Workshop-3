@@ -1,44 +1,41 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import ILogin from '../model/Login';
+import { Observable } from 'rxjs/internal/Observable';
+import { environment } from '../../../environments/environment';
 import IUser from '../model/User';
+
+const BASE_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  registeredUsers: IUser[] | null;
   loggedInUser: IUser | null;
-  isLoggedInUser: boolean | null;
 
-  constructor(private router: Router) {
-    this.isLoggedInUser = JSON.parse(localStorage.getItem('isLogged') || 'false');
-    this.loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-    this.registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+  get isLoggedInUser() {
+    return JSON.parse(
+      localStorage.getItem('isLogged') || 'false'
+    );
   }
 
-  register(user: IUser) {
-
-    this.registeredUsers?.push(user);
-    localStorage.setItem('registeredUsers', JSON.stringify(this.registeredUsers));
-
-    this.router.navigate(['/login']);
+  constructor(private router: Router, private http: HttpClient) {
+    this.loggedInUser = JSON.parse(
+      localStorage.getItem('loggedInUser') || '{}'
+    );
   }
 
-  login(user: ILogin) {
-    const currentUser = this.registeredUsers?.find((x) => x.email == user.email);
-    currentUser!._id = '5fa64b162183ce1728ff371d';
-    if (currentUser != undefined && currentUser.password == user.password) {
-      this.isLoggedInUser = true;
-      localStorage.setItem('isLogged', JSON.stringify(true));
-      this.loggedInUser = currentUser;
-      localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
-      this.router.navigate(['/']);
-    }
+  register$(user: { username: string, email: string, password: string, tel?: string }) {
+    return this.http.post<IUser>(`${environment.apiUrl}/register`, user, { withCredentials: true })
+  }
+
+  login$(user: { email: string, password: string }) : Observable<IUser> {
+    return this.http.post<IUser>(`${environment.apiUrl}/login`, user, {
+      withCredentials: true,
+    });
   }
 
   logOut() {
-    this.isLoggedInUser = false;
     localStorage.setItem('isLogged', JSON.stringify(false));
     localStorage.removeItem('loggedInUser');
   }
