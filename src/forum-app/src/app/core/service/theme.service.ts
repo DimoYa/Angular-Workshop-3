@@ -22,7 +22,8 @@ export class ThemeService {
     return this.http.get<ITheme<IPost>>(`${BASE_URL}/themes/${id}`);
   }
 
-  createTheme(body: Object) : Observable<Object> {
-    return this.http.post(`${BASE_URL}/themes`, body);
+  createTheme$(body: { themeName: string, postText: string }): Observable<ITheme> {
+    console.log(body);
+    return this.http.post<ITheme>(`${BASE_URL}/themes`, body, { withCredentials: true });
   }
 }
